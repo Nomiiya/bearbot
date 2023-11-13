@@ -1,0 +1,6 @@
+# Node dependencies
+# run `npm install` to restore
+node_modules
+
+# Visual Studio Preferences
+.vs/
