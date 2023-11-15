@@ -1,9 +1,10 @@
-import discord, os, tweepy
+import discord, os, tweepy, re
 from dotenv import load_dotenv
 
 load_dotenv()
-APP_ID=os.getenv('APP_ID')
-APP_TOKEN=os.getenv('APP_TOKEN')
+APP_ID=os.getenv('DEV_ID')
+APP_TOKEN=os.getenv('DEV_TOKEN')
+
 
 auth = tweepy.OAuth1UserHandler(consumer_key=os.getenv('TWITTER_KEY'),
                   consumer_secret=os.getenv('TWITTER_KEY_SECRET'),
@@ -21,11 +22,10 @@ def discordClient():
     async def on_message(message):
         if message.author == client.user or message.author.bot:
             return
-
-        if message.content.startswith('https://x') or message.content.startswith('https://twitter'):
-            msg = message.content
-            url = "http://fxtwitter.com/" + msg.split('.com/', 1)[1]
-            await message.channel.send(url)
+        for link in re.findall('https:\/\/twitter\.com[\/\w]+', message.content):
+            await message.channel.send("http://fxtwitter.com/" + link.split('.com/', 1)[1])
+        for link in re.findall('https:\/\/x\.com[\/\w]+', message.content):
+            await message.channel.send("http://fxtwitter.com/" + link.split('.com/', 1)[1])
 
     client.run(APP_TOKEN)
 
